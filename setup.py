@@ -1,6 +1,6 @@
 import os
 import codecs
-from setuptools import setup, find_packages
+from setuptools import setup
 
 
 def read(fname):
@@ -15,7 +15,10 @@ setup(
     author='Artur Sousa',
     author_email='arturfelipe.sousa@gmail.com',
     url='https://github.com/arturfelipe/cities',
-    packages=find_packages(exclude=['demo']),
+    packages=[
+        'cities',
+    ],
+    package_dir={'cities': 'cities'},
     install_requires=[
         'requests',
     ],
