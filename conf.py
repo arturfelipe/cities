@@ -7,7 +7,8 @@ SOURCES = {
     'countries': {
         'path': os.path.join(SOURCES_DIR, 'countries.txt'),
         'url': 'http://download.geonames.org/export/dump/countryInfo.txt',
-        'collumns': (
+        'exclude_lines_regex': r'^#',
+        'colummns': (
             'iso',
             'iso3',
             'iso_numeric',

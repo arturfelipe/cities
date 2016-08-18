@@ -1,5 +1,6 @@
 # coding: utf-8
 import os
+import re
 import requests
 from conf import SOURCES
 
@@ -27,16 +28,22 @@ def check_source(source_name):
 def load_countries():
     lines = []
 
+    check_source('countries')
+
     with open(SOURCES['countries']['path']) as fd:
         lines = fd.readlines()
 
     for line in lines:
+        exclude_pattern = SOURCES['countries'].get('exclude_lines_regex')
+        if exclude_pattern:
+            if re.match(exclude_pattern, line):
+                continue
+
         data = line.strip('\n').split('\t')
         yield dict(zip(SOURCES['countries']['colummns'], data))
 
 
 if __name__ == '__main__':
-    # countries = list(load_countries())
-    # print(list(countries)[0])
-    # print(list(countries))
-    check_source('countries')
+    countries = list(load_countries())
+    print(list(countries)[0])
+    print(len(countries))
