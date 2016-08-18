@@ -1,7 +1,7 @@
 # coding: utf-8
 import os
 
-SOURCES_DIR = 'sources'
+SOURCES_DIR = 'cities_sources'
 
 SOURCES = {
     'countries': {
