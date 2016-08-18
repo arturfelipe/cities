@@ -10,7 +10,7 @@ def read(fname):
 
 setup(
     name='cities',
-    version='0.0.1',
+    version='0.0.1.rc1',
     description='Load data from cities and countries all over the world',
     author='Artur Sousa',
     author_email='arturfelipe.sousa@gmail.com',
