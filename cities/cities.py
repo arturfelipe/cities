@@ -2,7 +2,7 @@
 import os
 import re
 import requests
-from conf import SOURCES
+from .conf import SOURCES
 
 
 def download_source(source_name):
