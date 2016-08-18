@@ -1,15 +1,28 @@
 # coding: utf-8
 import os
 import re
+import io
 import requests
-from .conf import SOURCES
+import zipfile
+from .conf import SOURCES, SOURCES_DIR
 
 
 def download_source(source_name):
-    resp = requests.get(SOURCES[source_name]['url'])
+    url = SOURCES[source_name]['url']
+    resp = requests.get(url)
+
     if resp.status_code == 200:
-        with open(SOURCES[source_name]['path'], 'w') as fd:
-            fd.write(resp.text)
+        source_path = SOURCES[source_name]['path']
+        source_content = resp.text
+
+        if url.endswith('.zip'):
+            z = zipfile.ZipFile(io.BytesIO(resp.content))
+            z_path = z.extract(SOURCES[source_name]['file_name'], SOURCES_DIR)
+            os.rename(z_path, source_path)
+            return
+
+        with open(source_path, 'w') as fd:
+            fd.write(source_content)
 
 
 def check_source(source_name):
@@ -21,7 +34,8 @@ def check_source(source_name):
             msg = 'Could not create dir "{}". {}'
             raise Exception(msg.format(dir_path, e))
 
-    if not os.path.exists(SOURCES[source_name]['path']):
+    source_path = SOURCES[source_name]['path']
+    if not os.path.exists(source_path):
         download_source(source_name)
 
 
@@ -43,7 +57,30 @@ def load_countries():
         yield dict(zip(SOURCES['countries']['colummns'], data))
 
 
+def load_cities():
+    lines = []
+
+    check_source('cities')
+
+    source_path = SOURCES['cities']['path']
+    with open(source_path) as fd:
+        lines = fd.readlines()
+
+    for line in lines:
+        exclude_pattern = SOURCES['cities'].get('exclude_lines_regex')
+        if exclude_pattern:
+            if re.match(exclude_pattern, line):
+                continue
+
+        data = line.strip('\n').split('\t')
+        yield dict(zip(SOURCES['cities']['colummns'], data))
+
+
 if __name__ == '__main__':
     countries = list(load_countries())
-    print(list(countries)[0])
+    print(countries[0])
     print(len(countries))
+
+    cities = list(load_cities())
+    print(cities[0])
+    print(len(cities))
