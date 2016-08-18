@@ -14,7 +14,8 @@ data separated by a `tab` char, these are the columns available:
 
 * __iso__: ISO
 * __iso3__: ISO3
-* __iso_numeric__: ISO-Numeric fips
+* __iso_numeric__: ISO-Numeric
+* __fips__: fips
 * __country__: Country
 * __capital__: Capital
 * __area__: Area(in sq km)
